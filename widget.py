@@ -5,12 +5,22 @@
 from __future__ import division
 from __future__ import print_function
 
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import Qt
 
     
 class Dock(QtGui.QDockWidget):
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+
+from PyQt6 import QtWidgets
+
+
+class Dock(QtWidgets.QDockWidget):
+>>>>>>> Stashed changes
     """ dock """
     def __init__(self, widget, title, lock=False):
         QtGui.QDockWidget.__init__(self, title)
@@ -18,7 +28,7 @@ class Dock(QtGui.QDockWidget):
             self.setTitleBarWidget(QtGui.QWidget())
             self.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
         self.setWidget(widget)
-        
+
     def lock(self, state):
         if state:
             if self.isFloating():
@@ -31,16 +41,28 @@ class Dock(QtGui.QDockWidget):
             self.setFeatures(QtGui.QDockWidget.AllDockWidgetFeatures)
             self.setTitleBarWidget(None)
             self.setAllowedAreas(QtCore.Qt.AllDockWidgetAreas)
+<<<<<<< Updated upstream
             
     
 class Label(QtGui.QLabel):
+=======
+
+
+class Label(QtWidgets.QLabel):
+>>>>>>> Stashed changes
     """ Label """
     def __init__(self, tooltip):
         QtGui.QLabel.__init__(self)
         self.setToolTip(tooltip)
+<<<<<<< Updated upstream
         
     
 class Button(QtGui.QToolButton):
+=======
+
+
+class Button(QtWidgets.QToolButton):
+>>>>>>> Stashed changes
     """ button """
     def __init__(self, tooltip, icon, connection, checkable=False):
         QtGui.QToolButton.__init__(self)
@@ -81,12 +103,17 @@ class Viewer(QtGui.QScrollArea):
     """ QScrollArea you can move with midbutton"""
     resyzing = QtCore.pyqtSignal(tuple)
     def __init__ (self):
+<<<<<<< Updated upstream
         QtGui.QScrollArea.__init__(self)
         
+=======
+        QtWidgets.QScrollArea.__init__(self)
+
+>>>>>>> Stashed changes
     def event(self, event):
         """ capture middle mouse event to move the view """
         # clic: save position
-        if   (event.type() == QtCore.QEvent.MouseButtonPress and
+        if   (event.type() == QtCore.QEvent.Type.MouseButtonPress and
               event.button() == QtCore.Qt.MidButton):
             self.mouseX, self.mouseY = event.x(), event.y()
             return True

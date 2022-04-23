@@ -2,8 +2,14 @@
 #-*- coding: utf-8 -*-
 
 
+<<<<<<< Updated upstream
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+=======
+from PyQt6 import QtGui
+from PyQt6 import QtCore
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 
 from dialogs import RenameLayerDialog
 from widget import Button, Viewer
@@ -15,7 +21,7 @@ class LayersCanvas(QtGui.QWidget):
         QtGui.QWidget.__init__(self)
         self.parent = parent
         self.setFixedWidth(100)
-        
+
         self.white = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         self.black = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         self.grey = QtGui.QBrush(QtGui.QColor(0, 0, 0, 30))
@@ -23,14 +29,14 @@ class LayersCanvas(QtGui.QWidget):
         self.layerH = 20
         self.margeH = 22
         self.visibleList = []
-        
+
     def paintEvent(self, ev=''):
         lH, mH = self.layerH, self.margeH
         p = QtGui.QPainter(self)
         p.setBrush(QtGui.QBrush(self.white))
         p.setFont(self.font)
         self.visibleList = []
-        
+
         # background
         p.fillRect (0, 0, self.width(), self.height(), self.grey)
         p.fillRect (0, 0, self.width(), mH-2, self.white)
@@ -50,9 +56,9 @@ class LayersCanvas(QtGui.QWidget):
             p.drawRect(rect)
             if layer.visible:
                 p.fillRect(84, y-17, 12, 12, self.black)
-        
+
     def event(self, event):
-        if (event.type() == QtCore.QEvent.MouseButtonPress and
+        if (event.type() == QtCore.QEvent.Type.MouseButtonPress and
                        event.button()==QtCore.Qt.LeftButton):
             item = self.layerAt(event.y())
             if item is not None:
@@ -71,15 +77,26 @@ class LayersCanvas(QtGui.QWidget):
             if item is not None:
                 self.parent.renameLayer(item)
                 self.update()
+<<<<<<< Updated upstream
         return QtGui.QWidget.event(self, event)
     
+=======
+        return QtWidgets.QWidget.event(self, event)
+
+>>>>>>> Stashed changes
     def layerAt(self, y):
         l = (y - 23) // 20
         if 0 <= l < len(self.parent.project.timeline):
             return l
+<<<<<<< Updated upstream
             
         
 class TimelineCanvas(QtGui.QWidget):
+=======
+
+
+class TimelineCanvas(QtWidgets.QWidget):
+>>>>>>> Stashed changes
     """ widget containing the timeline """
     def __init__(self, parent):
         QtGui.QWidget.__init__(self, parent)
@@ -102,27 +119,37 @@ class TimelineCanvas(QtGui.QWidget):
         fontLight = QtGui.QFont('SansSerif', 7, QtGui.QFont.Light)
         fontBold = QtGui.QFont('SansSerif', 8, QtGui.QFont.Normal)
         p.setBrush(self.whitea)
-        
+
         # background
         p.fillRect (0, 0, self.width(), self.height(), self.grey)
         p.fillRect (0, 0, self.width(), 21, self.white)
         p.drawLine (0, 21, self.width(), 21)
         for j, i in enumerate(range(7, self.width(), fW), 1):
             p.drawLine (i-7, 19, i-7, 21)
-            
+
             if j % 5 == 0:
                 p.setFont(fontLight)
                 metrics = p.fontMetrics()
                 fw = metrics.width(str(j))
+<<<<<<< Updated upstream
                 p.drawText(i-fw/2, 17, str(j))
             
+=======
+                p.drawText(int(i-fw/2), 17, str(j))
+
+>>>>>>> Stashed changes
             if j % self.parent.project.fps == 0:
                 p.setFont(fontBold)
                 metrics = p.fontMetrics()
                 s = str(j//self.parent.project.fps)
                 fw = metrics.width(s)
+<<<<<<< Updated upstream
                 p.drawText(i-fw/2, 10, s)
         
+=======
+                p.drawText(int(i-fw/2), 10, s)
+
+>>>>>>> Stashed changes
         if self.parent.selection:
             l = self.parent.selection[0]
             f1, f2 = self.parent.selection[1], self.parent.selection[2]
@@ -131,7 +158,7 @@ class TimelineCanvas(QtGui.QWidget):
                 f1, f2, = f2, f1
             p.fillRect((f1 * fW) + mX, (l * fH) + mY, 
                        (f2 - f1 + 1) * fW, fH, self.white)
-            
+
         # current frame
         p.drawLine(self.parent.project.curFrame*fW, 0, 
                    self.parent.project.curFrame*fW, self.height())
@@ -160,7 +187,7 @@ class TimelineCanvas(QtGui.QWidget):
         p.drawRects(framesRects)
         p.setBrush(self.white)
         p.drawRects(strechRects)
-        
+
     def getMiniSize(self):
         """ return the minimum size of the widget 
             to display all frames and layers """
@@ -168,9 +195,9 @@ class TimelineCanvas(QtGui.QWidget):
         maxF = self.parent.project.timeline.frameCount()
         minW = (maxF * self.frameWidth) + self.margeX
         return (minW, minH)
-        
+
     def event(self, event):
-        if   (event.type() == QtCore.QEvent.MouseButtonPress and
+        if   (event.type() == QtCore.QEvent.Type.MouseButtonPress and
               event.button()==QtCore.Qt.LeftButton):
             frame = self.frameAt(event.x())
             layer = self.layerAt(event.y())
@@ -201,20 +228,25 @@ class TimelineCanvas(QtGui.QWidget):
                 if self.parent.selection:
                     self.parent.selection[2] = frame
                 self.strech(frame)
-                
+
                 self.parent.layersCanvas.update()
                 self.update()
                 self.parent.project.curFrame = frame
                 self.parent.project.updateViewSign.emit()
             return True
+<<<<<<< Updated upstream
         return QtGui.QWidget.event(self, event)
         
+=======
+        return QtWidgets.QWidget.event(self, event)
+
+>>>>>>> Stashed changes
     def isInStrechBox(self, pos):
         for layer, i in enumerate(self.strechBoxList):
             for frame, j in enumerate(i):
                 if j and j.contains(pos):
                     return (frame, layer)
-        
+
     def strech(self, f):
         if self.strechFrame:
             sl, sf = self.strechFrame[0], self.strechFrame[1]
@@ -233,34 +265,40 @@ class TimelineCanvas(QtGui.QWidget):
                     break
             self.parent.adjustSize()
             self.strechFrame = (sl, sf, True)
-        
+
     def frameAt(self, x):
         s = (x - self.margeX)  // self.frameWidth
         if 0 <= s <= self.width() // self.frameWidth:
             return s
-        
+
     def layerAt(self, y):
         l = ((y - self.margeY) // self.frameHeight)
         if 0 <= l < len(self.parent.project.timeline):
             return l
+<<<<<<< Updated upstream
         
         
 class TimelineWidget(QtGui.QWidget):
+=======
+
+
+class TimelineWidget(QtWidgets.QWidget):
+>>>>>>> Stashed changes
     """ widget containing timeline, layers and all their buttons """
     def __init__(self, project):
         QtGui.QWidget.__init__(self)
         self.project = project
-        
+
         self.selection = False
         self.toPaste = False
-        
+
         ### viewer ###
         self.layersCanvas = LayersCanvas(self)
         self.layersV = Viewer()
         self.layersV.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.layersV.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.layersV.setWidget(self.layersCanvas)
-        
+
         self.timelineCanvas = TimelineCanvas(self)
         self.timelineV = Viewer()
         self.timelineV.setWidget(self.timelineCanvas)
@@ -268,7 +306,7 @@ class TimelineWidget(QtGui.QWidget):
         self.timelineV.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.timeVSize = (0, 0)
         self.timelineV.resyzing.connect(self.adjustSize)
-        
+
         self.layersV.verticalScrollBar().valueChanged.connect(
                 lambda v: self.timelineV.verticalScrollBar().setValue(v))
         self.timelineV.verticalScrollBar().valueChanged.connect(
@@ -276,7 +314,7 @@ class TimelineWidget(QtGui.QWidget):
         self.project.updateTimelineSign.connect(self.timelineCanvas.update)
         self.project.updateTimelineSign.connect(self.layersCanvas.update)
         self.project.updateTimelineSizeSign.connect(self.adjustSize)
-        
+
         ### adding and deleting layers ###
         self.addLayerB = Button("add layer", "icons/layer_add.png", self.addLayerClicked)
         self.dupLayerB = Button("duplicate layer", "icons/layer_dup.png", self.duplicateLayerClicked)
@@ -284,13 +322,13 @@ class TimelineWidget(QtGui.QWidget):
         self.mergeLayerB = Button("merge layer", "icons/layer_merge.png", self.mergeLayerClicked)
         self.upLayerB = Button("move up layer", "icons/layer_up.png", self.upLayerClicked)
         self.downLayerB = Button("move down layer", "icons/layer_down.png", self.downLayerClicked)
-        
+
         ### adding and deleting images ###
         self.addFrameB = Button("add frame", "icons/frame_add.png", self.addFrameClicked)
         self.dupFrameB = Button("duplicate frame", "icons/frame_dup.png", self.duplicateFrameClicked)
         self.delFrameB = Button("delete frame", "icons/frame_del.png", self.deleteFrameClicked)
         self.clearFrameB = Button("clear frame", "icons/frame_clear.png", self.clearFrameClicked)
-        
+
         ### play the animation ###
         self.fpsW = QtGui.QSpinBox(self)
         self.fpsW.setValue(self.project.fps)
@@ -310,6 +348,7 @@ class TimelineWidget(QtGui.QWidget):
         layerTools.addWidget(self.delLayerB)
         layerTools.addWidget(self.mergeLayerB)
         layerTools.addStretch()
+<<<<<<< Updated upstream
         
         layerTools2 = QtGui.QHBoxLayout()
         layerTools2.setSpacing(0)
@@ -317,6 +356,15 @@ class TimelineWidget(QtGui.QWidget):
         layerTools2.addWidget(self.downLayerB)
         
         canvasTools = QtGui.QHBoxLayout()
+=======
+
+        layerTools2 = QtWidgets.QHBoxLayout()
+        layerTools2.setSpacing(0)
+        layerTools2.addWidget(self.upLayerB)
+        layerTools2.addWidget(self.downLayerB)
+
+        canvasTools = QtWidgets.QHBoxLayout()
+>>>>>>> Stashed changes
         canvasTools.setSpacing(0)
         canvasTools.addWidget(self.addFrameB)
         canvasTools.addWidget(self.dupFrameB)
@@ -326,8 +374,13 @@ class TimelineWidget(QtGui.QWidget):
         canvasTools.addWidget(self.fpsW)
         canvasTools.addWidget(self.repeatB)
         canvasTools.addWidget(self.playFrameB)
+<<<<<<< Updated upstream
         
         layout = QtGui.QGridLayout()
+=======
+
+        layout = QtWidgets.QGridLayout()
+>>>>>>> Stashed changes
         layout.setSpacing(4)
         layout.addLayout(layerTools, 0, 0)
         layout.addWidget(self.layersV, 0, 1)
@@ -335,7 +388,7 @@ class TimelineWidget(QtGui.QWidget):
         layout.addLayout(layerTools2, 1, 1)
         layout.addLayout(canvasTools, 1, 2)
         self.setLayout(layout)
-            
+
     ######## Size adjust ###############################################
     def showEvent(self, event):
         self.timelineCanvas.setMinimumHeight(len(self.project.timeline)*20 + 25)
@@ -348,7 +401,7 @@ class TimelineWidget(QtGui.QWidget):
                     self.layersV.verticalScrollBar().width() + 2)
         self.layersV.setMaximumWidth(self.layersCanvas.width() + 
                     self.layersV.verticalScrollBar().width() + 2)
-        
+
     def adjustSize(self, timeVSize=False):
         if timeVSize:
             self.timeVSize = timeVSize
@@ -366,7 +419,7 @@ class TimelineWidget(QtGui.QWidget):
             self.layersCanvas.setFixedHeight(wH-2)
         self.timelineCanvas.update()
         self.layersCanvas.update()
-    
+
     ######## Copy ######################################################
     def cut(self):
         if self.selection:
@@ -387,7 +440,7 @@ class TimelineWidget(QtGui.QWidget):
             # delete cutted frames
             del layer[f1:f2+1]
             self.timelineCanvas.update()
-            
+
     def copy(self):
         if self.selection:
             layer = self.project.timeline[self.selection[0]]
@@ -403,7 +456,7 @@ class TimelineWidget(QtGui.QWidget):
             for n, canvas in enumerate(self.toPaste):
                 if canvas:
                     self.toPaste[n] = canvas.copy_()
-        
+
     def paste(self):
         if self.toPaste:
             self.project.saveToUndo("frames")
@@ -415,7 +468,7 @@ class TimelineWidget(QtGui.QWidget):
                 self.project.timeline[l].insert(f+n, canvas)
             self.timelineCanvas.update()
             self.project.updateViewSign.emit()
-            
+
     ######## Buttons ###################################################
     def addFrameClicked(self):
         self.project.saveToUndo("frames")
@@ -423,7 +476,7 @@ class TimelineWidget(QtGui.QWidget):
                     self.project.curFrame, self.project.makeCanvas())
         self.adjustSize()
         self.project.updateViewSign.emit()
-        
+
     def duplicateFrameClicked(self):
         self.project.saveToUndo("frames")
         layer = self.project.timeline[self.project.curLayer]
@@ -431,7 +484,7 @@ class TimelineWidget(QtGui.QWidget):
                            layer.getCanvas(self.project.curFrame).copy_())
         self.adjustSize()
         self.project.updateViewSign.emit()
-        
+
     def deleteFrameClicked(self):
         self.project.saveToUndo("frames")
         layer = self.project.timeline[self.project.curLayer]
@@ -446,20 +499,20 @@ class TimelineWidget(QtGui.QWidget):
             layer.pop(frame)
         self.adjustSize()
         self.project.updateViewSign.emit()
-        
+
     def clearFrameClicked(self):
         f = self.project.timeline.getCanvas()
         if f:
             f.clear()
             self.project.updateViewSign.emit()
-        
+
     def addLayerClicked(self):
         self.project.saveToUndo("frames")
         self.project.timeline.insert(self.project.curLayer, 
                                      self.project.makeLayer())
         self.adjustSize()
         self.project.updateViewSign.emit()
-        
+
     def duplicateLayerClicked(self):
         self.project.saveToUndo("frames")
         layer = self.project.timeline[self.project.curLayer].deepCopy()
@@ -467,7 +520,7 @@ class TimelineWidget(QtGui.QWidget):
         self.project.timeline.insert(self.project.curLayer, layer)
         self.adjustSize()
         self.project.updateViewSign.emit()
-        
+
     def deleteLayerClicked(self):
         self.project.saveToUndo("frames")
         del self.project.timeline[self.project.curLayer]
@@ -476,7 +529,7 @@ class TimelineWidget(QtGui.QWidget):
             self.project.timeline.append(self.project.makeLayer())
         self.adjustSize()
         self.project.updateViewSign.emit()
-        
+
     def mergeLayerClicked(self):
         if not self.project.curLayer < len(self.project.timeline) - 1:
             return
@@ -510,7 +563,7 @@ class TimelineWidget(QtGui.QWidget):
         self.project.timeline[self.project.curLayer] = layer3
         self.adjustSize()
         self.project.updateViewSign.emit()
-        
+
     def upLayerClicked(self):
         self.project.saveToUndo("frames")
         l = self.project.curLayer
@@ -520,7 +573,7 @@ class TimelineWidget(QtGui.QWidget):
             self.project.curLayer = l - 1
             self.project.updateViewSign.emit()
             self.project.updateTimelineSign.emit()
-        
+
     def downLayerClicked(self):
         self.project.saveToUndo("frames")
         l = self.project.curLayer
@@ -530,7 +583,7 @@ class TimelineWidget(QtGui.QWidget):
             self.project.curLayer = l + 1
             self.project.updateViewSign.emit()
             self.project.updateTimelineSign.emit()
-    
+
     def renameLayer(self, l):
         name = self.project.timeline[l].name
         nName = RenameLayerDialog(name).getReturn()
@@ -538,7 +591,7 @@ class TimelineWidget(QtGui.QWidget):
             self.project.saveToUndo("frames")
             self.project.timeline[l].name = str(nName)
             self.project.updateTimelineSign.emit()
-        
+
     ######## Play ######################################################
     def fpsChanged(self):
         if 0 < self.fpsW.value() < 161:
@@ -571,14 +624,14 @@ class TimelineWidget(QtGui.QWidget):
             self.timer.start(1000//self.fps)
         elif self.playFrameB.state == 'stop':
             self.playEnd()
-            
+
     def playEnd(self):
         self.timer.stop()
         self.playFrameB.state = "play"
         self.playFrameB.setIcon(QtGui.QIcon(QtGui.QPixmap("icons/play_play.png")))
         self.project.playing = False
         self.project.updateViewSign.emit()
-        
+
     def animate(self):
         if self.fps != self.project.fps:
             self.fps = self.project.fps
@@ -595,4 +648,4 @@ class TimelineWidget(QtGui.QWidget):
                 self.project.updateViewSign.emit()
             else:
                 self.playEnd()
-            
+

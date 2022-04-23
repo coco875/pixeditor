@@ -2,9 +2,15 @@
 #-*- coding: utf-8 -*-
 
 import os
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import Qt
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 from colorPicker import ColorDialog
 from widget import Background
 from import_export import import_palette
@@ -33,13 +39,21 @@ class BackgroundDialog(QtGui.QDialog):
         self.preview.fill(self.color)
         self.previewL = QtGui.QLabel()
         self.previewL.setPixmap(self.preview)
-        
+
         ### square pattern ###
+<<<<<<< Updated upstream
         self.squareRadio = QtGui.QRadioButton("square", self)
         self.sizeL = QtGui.QLabel("size :")
         self.sizeW = QtGui.QLineEdit("16", self)
         self.sizeW.setValidator(QtGui.QIntValidator(self.sizeW))
         
+=======
+        self.squareRadio = QtWidgets.QRadioButton("square", self)
+        self.sizeL = QtWidgets.QLabel("size :")
+        self.sizeW = QtWidgets.QLineEdit("16", self)
+        self.sizeW.setValidator(QtWidgets.QIntValidator(self.sizeW))
+
+>>>>>>> Stashed changes
         ### file pattern ###
         self.fileRadio = QtGui.QRadioButton("file", self)
         ### model to store images ###
@@ -57,8 +71,13 @@ class BackgroundDialog(QtGui.QDialog):
         # select the first one
         self.fileName = self.modImgList.item(0).path
         sel = self.modImgList.createIndex(0, 0)
+<<<<<<< Updated upstream
         self.imgList.selectionModel().select(sel, QtGui.QItemSelectionModel.Select)
         
+=======
+        self.imgList.selectionModel().select(sel, QtWidgets.QItemSelectionModel.Select)
+
+>>>>>>> Stashed changes
         ### init ###
         if type(arg) is int:
             self.pattern = "square"
@@ -75,7 +94,7 @@ class BackgroundDialog(QtGui.QDialog):
                     self.imgList.selectionModel().select(sel, QtGui.QItemSelectionModel.Select)
                     self.fileName = arg
             self.size = 16
-            
+
         ### preview ###
         self.updatePreview()
         # connect
@@ -83,7 +102,7 @@ class BackgroundDialog(QtGui.QDialog):
         self.squareRadio.toggled.connect(self.radioToggled)
         self.sizeW.textChanged.connect(self.sizeChanged)
         self.imgList.selectionModel().selectionChanged.connect(self.fileChanged)
-        
+
         ### apply, undo ###
         self.cancelW = QtGui.QPushButton('cancel', self)
         self.cancelW.clicked.connect(self.cancelClicked)
@@ -95,14 +114,14 @@ class BackgroundDialog(QtGui.QDialog):
         grid.setSpacing(4)
         grid.addWidget(self.colorL, 0, 1)
         grid.addWidget(self.colorW, 0, 2)
-        
+
         grid.addWidget(self.squareRadio, 1, 0)
         grid.addWidget(self.sizeL, 1, 1)
         grid.addWidget(self.sizeW, 1, 2)
-        
+
         grid.addWidget(self.fileRadio, 2, 0)
         grid.addWidget(self.imgList, 2, 1, 2, 2)
-        
+
         grid.addWidget(self.previewL, 0, 3, 4, 1)
 
         okBox = QtGui.QHBoxLayout()
@@ -117,7 +136,7 @@ class BackgroundDialog(QtGui.QDialog):
 
         self.setLayout(vBox)
         self.exec_()
-        
+
     def colorClicked(self):
         ok, color = ColorDialog(False, self.color).getQColor()
         if ok:
@@ -125,7 +144,7 @@ class BackgroundDialog(QtGui.QDialog):
             self.colorIcon.fill(self.color)
             self.colorW.setIcon(QtGui.QIcon(self.colorIcon))
             self.updatePreview()
-        
+
     def sizeChanged(self, s):
         try:
             self.size = int(s)
@@ -133,20 +152,20 @@ class BackgroundDialog(QtGui.QDialog):
             self.size = 0
         if self.pattern == "square":
             self.updatePreview()
-        
+
     def radioToggled(self):
         if self.squareRadio.isChecked():
             self.pattern = "square"
         elif self.fileRadio.isChecked():
             self.pattern = "file"
         self.updatePreview()
-            
+
     def fileChanged(self):
         sel = self.imgList.selectionModel().selectedIndexes()[0].row()
         self.fileName = self.modImgList.item(sel).path
         if self.pattern == "file":
             self.updatePreview()
-        
+
     def updatePreview(self):
         self.preview.fill(self.color)
         p = QtGui.QPainter(self.preview)
@@ -155,7 +174,7 @@ class BackgroundDialog(QtGui.QDialog):
         elif self.pattern == "file":
             p.drawPixmap(16, 16, Background(QtCore.QSize(96, 96), self.fileName))
         self.previewL.setPixmap(self.preview)
-        
+
     def okClicked(self):
         try:
             self.size = int(self.sizeW.text())
@@ -191,18 +210,18 @@ class NewDialog(QtGui.QDialog):
         self.hW = QtGui.QSpinBox(self)
         self.hW.setRange(1, 100000)
         self.hW.setValue(size.width())
-        
+
         ### palette ###
         palettePath = os.path.join("resources", "palette")
         ls = os.listdir(palettePath)
         ls.sort()
         self.paletteDict = {}
-            
+
         self.paletteW = QtGui.QComboBox(self)
         for i in ls:
             self.paletteDict[os.path.splitext(i)[0]] = os.path.join(palettePath, i)
             self.paletteW.addItem(os.path.splitext(i)[0])
-            
+
         ### apply, undo ###
         self.cancelW = QtGui.QPushButton('cancel', self)
         self.cancelW.clicked.connect(self.cancelClicked)
@@ -231,7 +250,7 @@ class NewDialog(QtGui.QDialog):
 
         self.setLayout(vBox)
         self.exec_()
-        
+
     def newClicked(self):
         self.size = QtCore.QSize(int(self.wW.text()), int(self.hW.text()))
         self.palette = import_palette(self.paletteDict[self.paletteW.currentText()])
@@ -349,20 +368,25 @@ class CropDialog(QtGui.QDialog):
         if self.result():
             return self.rect
 
+<<<<<<< Updated upstream
 class ResizeDialog(QtGui.QDialog):
     
+=======
+class ResizeDialog(QtWidgets.QDialog):
+
+>>>>>>> Stashed changes
     def __init__(self, size):
         QtGui.QDialog.__init__(self)
         self.setWindowTitle("resize animation")
         self.size = size
         self.nSize = None
-        
+
         self.factor = 1
         self.factorW = QtGui.QComboBox(self)
         self.factorW.addItems(["1/4", "1/3", "1/2", "1", "2", "3", "4"])
         self.factorW.setCurrentIndex(3)
         self.factorW.activated[str].connect(self.factorClicked)
-        
+
         ### width ###
         self.wL = QtGui.QLabel("width")
         self.wW = QtGui.QSpinBox(self)
@@ -374,11 +398,16 @@ class ResizeDialog(QtGui.QDialog):
         self.hW = QtGui.QSpinBox(self)
         self.hW.setRange(1, 100000)
         self.hW.setValue(self.size.height())
+<<<<<<< Updated upstream
         self.exHL = QtGui.QLabel(str(self.size.height()))
         
+=======
+        self.exHL = QtWidgets.QLabel(str(self.size.height()))
+
+>>>>>>> Stashed changes
         self.wW.valueChanged.connect(self.valueChanged)
         self.hW.valueChanged.connect(self.valueChanged)
-        
+
         ### apply, undo ###
         self.cancelW = QtGui.QPushButton('cancel', self)
         self.cancelW.clicked.connect(self.cancelClicked)
@@ -410,23 +439,23 @@ class ResizeDialog(QtGui.QDialog):
 
         self.setLayout(vBox)
         self.exec_()
-        
+
     def valueChanged(self, n):
         self.factorW.setCurrentIndex(-1)
-        
+
     def factorClicked(self, n):
         if n[:2] == "1/":
             size = self.size / int(n[2])
         else:
             size = self.size * int(n)
-            
+
         self.wW.valueChanged.disconnect()
         self.hW.valueChanged.disconnect()
         self.wW.setValue(size.width())
         self.hW.setValue(size.height())
         self.wW.valueChanged.connect(self.valueChanged)
         self.hW.valueChanged.connect(self.valueChanged)
-        
+
     def resizeClicked(self):
         size = QtCore.QSize(self.wW.value(), self.hW.value())
         if size != self.size:

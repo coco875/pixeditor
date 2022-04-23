@@ -2,8 +2,14 @@
 #-*- coding: utf-8 -*-
 
 import sys
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 
 
 def getHue(color):
@@ -12,8 +18,13 @@ def getHue(color):
         return color.hue()
     else:
         return 0
+<<<<<<< Updated upstream
         
 class SatVal(QtGui.QGraphicsView):
+=======
+
+class SatVal(QtWidgets.QGraphicsView):
+>>>>>>> Stashed changes
     def __init__(self, parent, H, S, V):
         QtGui.QGraphicsView.__init__(self)
         self.parent = parent
@@ -21,12 +32,18 @@ class SatVal(QtGui.QGraphicsView):
         self.setFrameShape(QtGui.QFrame.Box)
         self.setFrameShadow(QtGui.QFrame.Plain)
         self.setLineWidth(1)
+<<<<<<< Updated upstream
         
         self.scene = QtGui.QGraphicsScene(self)
         self.scene.setItemIndexMethod(QtGui.QGraphicsScene.NoIndex)
+=======
+
+        self.scene = QtWidgets.QGraphicsScene(self)
+        self.scene.setItemIndexMethod(QtWidgets.QGraphicsScene.NoIndex)
+>>>>>>> Stashed changes
         self.setScene(self.scene)
         self.scene.setSceneRect(0, 0, 256, 256)
-        
+
         self.colorGrad = QtGui.QLinearGradient()
         self.colorGrad.setStart(0, 0)
         self.colorGrad.setFinalStop(0, 255)
@@ -36,7 +53,7 @@ class SatVal(QtGui.QGraphicsView):
         self.colorGradItem.setBrush(QtGui.QBrush(self.colorGrad))
         self.colorGradItem.setPen(QtGui.QPen(QtCore.Qt.NoPen))
         self.scene.addItem(self.colorGradItem)
-        
+
         blackGrad = QtGui.QLinearGradient()
         blackGrad.setStart(0, 0)
         blackGrad.setFinalStop(256, 0)
@@ -46,22 +63,27 @@ class SatVal(QtGui.QGraphicsView):
         blackGradItem.setBrush(QtGui.QBrush(blackGrad))
         blackGradItem.setPen(QtGui.QPen(QtCore.Qt.NoPen))
         self.scene.addItem(blackGradItem)
+<<<<<<< Updated upstream
         
         self.pointer = QtGui.QGraphicsPixmapItem(QtGui.QPixmap('icons/color_picker_pointer.png'))
+=======
+
+        self.pointer = QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap('icons/color_picker_pointer.png'))
+>>>>>>> Stashed changes
         self.pointer.setOffset(-5, -5)
         self.pointer.setPos(V, S)
         self.scene.addItem(self.pointer)
-        
+
     def val_changed(self, V):
         self.pointer.setPos(V, self.pointer.scenePos().y())
-        
+
     def sat_changed(self, S):
         self.pointer.setPos(self.pointer.scenePos().x(), S)
-        
+
     def hue_changed(self, H):
         self.colorGrad.setColorAt(1, QtGui.QColor().fromHsv(H, 255, 255))
         self.colorGradItem.setBrush(QtGui.QBrush(self.colorGrad))
-    
+
     def move(self, pos):
         posX = pos.x()
         posY = pos.y()
@@ -75,17 +97,30 @@ class SatVal(QtGui.QGraphicsView):
             posY = 255
         self.pointer.setPos(posX, posY)
         self.parent.sat_val_changed(posY, posX)
-        
+
     def mousePressEvent(self, event):
         if event.buttons() == QtCore.Qt.LeftButton:
             self.move(event.pos())
-            
+
     def mouseMoveEvent(self, event):
         if event.buttons() == QtCore.Qt.LeftButton:
             self.move(event.pos())
+<<<<<<< Updated upstream
         
         
 class Hue(QtGui.QGraphicsView):
+=======
+
+    def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
+        if event.type() == QtCore.QEvent.Type.MouseButtonPress:
+            return self.mousePressEvent(event)
+        if event.type() == QtCore.QEvent.MouseMove:
+            return self.mouseMoveEvent(event)
+        return super().eventFilter(source, event)
+
+
+class Hue(QtWidgets.QGraphicsView):
+>>>>>>> Stashed changes
     def __init__(self, parent, H):
         QtGui.QGraphicsView.__init__(self)
         self.parent = parent
@@ -93,11 +128,16 @@ class Hue(QtGui.QGraphicsView):
         self.setFrameShape(QtGui.QFrame.Box)
         self.setFrameShadow(QtGui.QFrame.Plain)
         self.setLineWidth(1)
+<<<<<<< Updated upstream
         
         self.scene = QtGui.QGraphicsScene(self)
+=======
+
+        self.scene = QtWidgets.QGraphicsScene(self)
+>>>>>>> Stashed changes
         self.setScene(self.scene)
         self.scene.setSceneRect(0, 0, 16, 256)
-        
+
         huegrad = QtGui.QLinearGradient()
         huegrad.setStart(0, 0)
         huegrad.setFinalStop(0, 255)
@@ -112,15 +152,20 @@ class Hue(QtGui.QGraphicsView):
         self.hueGradient.setBrush(QtGui.QBrush(huegrad))
         self.hueGradient.setPen(QtGui.QColor(0, 0, 0, 0))
         self.scene.addItem(self.hueGradient)
+<<<<<<< Updated upstream
         
         self.pointer = QtGui.QGraphicsPixmapItem(QtGui.QPixmap('icons/color_picker_slider.png'))
+=======
+
+        self.pointer = QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap('icons/color_picker_slider.png'))
+>>>>>>> Stashed changes
         self.pointer.setOffset(0, -3)
         self.pointer.setPos(0, round(H / 360 * 256))
         self.scene.addItem(self.pointer)
-        
+
     def hue_changed(self, H):
         self.pointer.setPos(0, round(H / 360 * 256))
-        
+
     def move(self, pos):
         posY = pos.y()
         if posY < 0:
@@ -129,17 +174,30 @@ class Hue(QtGui.QGraphicsView):
             posY = 255
         self.pointer.setPos(0, posY)
         self.parent.hue_changed(round(posY / 256 * 360))
-        
+
     def mousePressEvent(self, event):
         if event.buttons() == QtCore.Qt.LeftButton:
             self.move(event.pos())
-            
+
     def mouseMoveEvent(self, event):
         if event.buttons() == QtCore.Qt.LeftButton:
             self.move(event.pos())
+<<<<<<< Updated upstream
         
         
 class Alpha(QtGui.QGraphicsView):
+=======
+
+    def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
+        if event.type() == QtCore.QEvent.Type.MouseButtonPress:
+            return self.mousePressEvent(event)
+        if event.type() == QtCore.QEvent.MouseMove:
+            return self.mouseMoveEvent(event)
+        return super().eventFilter(source, event)
+
+
+class Alpha(QtWidgets.QGraphicsView):
+>>>>>>> Stashed changes
     def __init__(self, parent, A):
         QtGui.QGraphicsView.__init__(self)
         self.parent = parent
@@ -153,7 +211,7 @@ class Alpha(QtGui.QGraphicsView):
         self.setScene(self.scene)
         self.scene.setSceneRect(0, 0, 16, 256)
         self.setBackgroundBrush(QtGui.QBrush(QtGui.QPixmap('icons/color_picker_alpha.png')))
-        
+
         alphagrad = QtGui.QLinearGradient()
         alphagrad.setStart(0, 0)
         alphagrad.setFinalStop(0, 255)
@@ -163,15 +221,15 @@ class Alpha(QtGui.QGraphicsView):
         self.alphaGradient.setBrush(QtGui.QBrush(alphagrad))
         self.alphaGradient.setPen(QtGui.QColor(0, 0, 0, 0))
         self.scene.addItem(self.alphaGradient)
-        
+
         self.pointer = QtGui.QGraphicsPixmapItem(QtGui.QPixmap('icons/color_picker_slider.png'))
         self.pointer.setOffset(0, -3)
         self.pointer.setPos(0, A)
         self.scene.addItem(self.pointer)
-        
+
     def alpha_changed(self, A):
         self.pointer.setPos(0, A)
-        
+
     def move(self, pos):
         posY = pos.y()
         if posY < 0:
@@ -180,17 +238,30 @@ class Alpha(QtGui.QGraphicsView):
             posY = 255
         self.pointer.setPos(0, posY)
         self.parent.alpha_changed(posY)
-        
+
     def mousePressEvent(self, event):
         if event.buttons() == QtCore.Qt.LeftButton:
             self.move(event.pos())
-            
+
     def mouseMoveEvent(self, event):
         if event.buttons() == QtCore.Qt.LeftButton:
             self.move(event.pos())
+<<<<<<< Updated upstream
         
         
 class ColorPreview(QtGui.QGraphicsView):
+=======
+
+    def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
+        if event.type() == QtCore.QEvent.Type.MouseButtonPress:
+            return self.mousePressEvent(event)
+        if event.type() == QtCore.QEvent.MouseMove:
+            return self.mouseMoveEvent(event)
+        return super().eventFilter(source, event)
+
+
+class ColorPreview(QtWidgets.QGraphicsView):
+>>>>>>> Stashed changes
     def __init__(self, parent, color, ex=True):
         QtGui.QGraphicsView.__init__(self)
         self.parent = parent
@@ -204,25 +275,36 @@ class ColorPreview(QtGui.QGraphicsView):
         self.setScene(self.scene)
         self.scene.setSceneRect(0, 0, 128, 64)
         self.setBackgroundBrush(QtGui.QBrush(QtGui.QPixmap('icons/color_picker_alpha.png')))
-        
+
         if ex:
             self.exColor = QtGui.QGraphicsRectItem(0, 0, 64, 64)
             self.exColor.setBrush(QtGui.QBrush(color))
             self.exColor.setPen(QtGui.QPen(QtCore.Qt.NoPen))
             self.scene.addItem(self.exColor)
+<<<<<<< Updated upstream
             
             self.newColor = QtGui.QGraphicsRectItem(64, 0, 64, 64)
+=======
+
+            self.newColor = QtWidgets.QGraphicsRectItem(64, 0, 64, 64)
+>>>>>>> Stashed changes
         else:
             self.newColor = QtGui.QGraphicsRectItem(0, 0, 128, 64)
         self.newColor.setBrush(QtGui.QBrush(color))
         self.newColor.setPen(QtGui.QPen(QtCore.Qt.NoPen))
         self.scene.addItem(self.newColor)
-        
+
     def color_changed(self, color):
         self.newColor.setBrush(QtGui.QBrush(color))
+<<<<<<< Updated upstream
         
         
 class ColorDialog(QtGui.QDialog):
+=======
+
+
+class ColorDialog(QtWidgets.QDialog):
+>>>>>>> Stashed changes
     color_changed = QtCore.pyqtSignal(QtGui.QColor)
     def __init__(self, alpha=True, color=None):
         QtGui.QDialog.__init__(self)
@@ -238,7 +320,7 @@ class ColorDialog(QtGui.QDialog):
         else:
             self.color = QtGui.QColor(255, 255, 255)
             self.colorPreview = ColorPreview(self, self.color, False)
-        
+
         self.satVal = SatVal(self, getHue(self.color), self.color.saturation(), self.color.value())
         self.hue = Hue(self, getHue(self.color))
         if alpha:
@@ -246,29 +328,44 @@ class ColorDialog(QtGui.QDialog):
         else:
             self.alpha = None
         self.color_changed.connect(self.colorPreview.color_changed)
+<<<<<<< Updated upstream
         
         self.hL = QtGui.QLabel("Hue")
+=======
+
+        self.hL = QtWidgets.QLabel("Hue")
+>>>>>>> Stashed changes
         self.hL.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.hW = QtGui.QSpinBox()
         self.hW.setRange(0, 359)
         self.hW.setValue(getHue(self.color))
         self.hW.setWrapping(True)
         self.hW.valueChanged.connect(self.h_changed)
+<<<<<<< Updated upstream
         
         self.sL = QtGui.QLabel("Saturation")
+=======
+
+        self.sL = QtWidgets.QLabel("Saturation")
+>>>>>>> Stashed changes
         self.sL.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.sW = QtGui.QSpinBox()
         self.sW.setRange(0, 255)
         self.sW.setValue(self.color.saturation())
         self.sW.valueChanged.connect(self.s_changed)
+<<<<<<< Updated upstream
         
         self.vL = QtGui.QLabel("Value")
+=======
+
+        self.vL = QtWidgets.QLabel("Value")
+>>>>>>> Stashed changes
         self.vL.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.vW = QtGui.QSpinBox()
         self.vW.setRange(0, 255)
         self.vW.setValue(self.color.value())
         self.vW.valueChanged.connect(self.v_changed)
-        
+
         if alpha:
             self.aL = QtGui.QLabel("Alpha")
             self.aL.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -276,18 +373,32 @@ class ColorDialog(QtGui.QDialog):
             self.aW.setRange(0, 255)
             self.aW.setValue(255-self.color.alpha())
             self.aW.valueChanged.connect(self.a_changed)
+<<<<<<< Updated upstream
         
         self.nameW = QtGui.QLineEdit(self.color.name())
         self.nameW.textChanged.connect(self.color_name_changed)
         self.color_changed.connect(self.col_changed)
         
         self.cancelW = QtGui.QPushButton('cancel', self)
+=======
+
+        self.nameW = QtWidgets.QLineEdit(self.color.name())
+        self.nameW.textChanged.connect(self.color_name_changed)
+        self.color_changed.connect(self.col_changed)
+
+        self.cancelW = QtWidgets.QPushButton('cancel', self)
+>>>>>>> Stashed changes
         self.cancelW.clicked.connect(self.cancel_clicked)
         self.okW = QtGui.QPushButton('ok', self)
         self.okW.clicked.connect(self.ok_clicked)
         self.okW.setDefault(True)
+<<<<<<< Updated upstream
         
         grid = QtGui.QGridLayout()
+=======
+
+        grid = QtWidgets.QGridLayout()
+>>>>>>> Stashed changes
         grid.setSpacing(8)
         grid.addWidget(self.satVal, 0, 0, 6, 1)
         grid.addWidget(self.hue, 0, 1, 6, 1)
@@ -318,14 +429,14 @@ class ColorDialog(QtGui.QDialog):
 
         self.setLayout(vBox)
         self.exec_()
-        
+
     def sat_val_changed(self, S, V):
         H = getHue(self.color)
         self.color.setHsv(H, S, V, self.color.alpha())
         self.color_changed.emit(self.color)
         self.sW.setValue(S)
         self.vW.setValue(V)
-        
+
     def hue_changed(self, H):
         V = self.color.value()
         S = self.color.saturation()
@@ -333,7 +444,7 @@ class ColorDialog(QtGui.QDialog):
         self.color_changed.emit(self.color)
         self.satVal.hue_changed(H)
         self.hW.setValue(H)
-    
+
     def h_changed(self, H):
         V = self.color.value()
         S = self.color.saturation()
@@ -341,35 +452,35 @@ class ColorDialog(QtGui.QDialog):
         self.color_changed.emit(self.color)
         self.satVal.hue_changed(H)
         self.hue.hue_changed(H)
-        
+
     def s_changed(self, S):
         H = getHue(self.color)
         V = self.color.value()
         self.color.setHsv(H, S, V, self.color.alpha())
         self.color_changed.emit(self.color)
         self.satVal.sat_changed(S)
-        
+
     def v_changed(self, V):
         H = getHue(self.color)
         S = self.color.saturation()
         self.color.setHsv(H, S, V, self.color.alpha())
         self.color_changed.emit(self.color)
         self.satVal.val_changed(V)
-        
+
     def alpha_changed(self, A):
         self.color.setAlpha(255-A)
         self.color_changed.emit(self.color)
         self.aW.setValue(A)
-        
+
     def a_changed(self, A):
         self.color.setAlpha(255-A)
         self.color_changed.emit(self.color)
         self.alpha.alpha_changed(A)
-        
+
     def col_changed(self, col):
         if not self.nameW.hasFocus():
             self.nameW.setText(col.name())
-        
+
     def color_name_changed(self, text):
         if self.nameW.hasFocus():
             col = QtGui.QColor(text)
@@ -379,7 +490,7 @@ class ColorDialog(QtGui.QDialog):
                 self.hue_changed(col.hue())
                 if self.alpha:
                     self.alpha_changed(col.alpha()-255)
-        
+
     def ok_clicked(self):
         self.accept()
 
@@ -391,19 +502,19 @@ class ColorDialog(QtGui.QDialog):
             return True , self.color
         else:
             return False, None
-            
+
     def getRgb(self):
         if self.result():
             return True , self.color.rgb()
         else:
             return False, None
-            
+
     def getRgba(self):
         if self.result():
             return True , self.color.rgba()
         else:
             return False, None
-            
+
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     print(ColorDialog(False).getRgb())

@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 
 from widget import Button
 
@@ -22,19 +28,19 @@ class ColorWidget(QtGui.QWidget):
             self.setToolTip("current color (E)")
         else:
             self.setToolTip("alpha color (E)")
-        
+
     def updateBackground(self):
          self.background = QtGui.QBrush(self.parent.project.bgColor)
          self.update()
 
     def event(self, event):
-        if (event.type() == QtCore.QEvent.MouseButtonPress and
+        if (event.type() == QtCore.QEvent.Type.MouseButtonPress and
                        event.button()==QtCore.Qt.LeftButton):
             if self.color:
                 self.parent.project.changeColor(self.parent.project.currentColor)
             else:
                 self.parent.project.changeColor(0)
-        elif event.type() == QtCore.QEvent.Paint:
+        elif event.type() == QtCore.QEvent.Type.Paint:
             col, cur = self.parent.project.color, self.parent.project.currentColor
             p = QtGui.QPainter(self)
             p.fillRect (0, 0, self.width(), self.height(), 
@@ -54,8 +60,13 @@ class ColorWidget(QtGui.QWidget):
                     QtGui.QColor().fromRgba(self.parent.project.colorTable[0])))
         return QtGui.QWidget.event(self, event)
 
+<<<<<<< Updated upstream
     
 class PenWidget(QtGui.QWidget):
+=======
+
+class PenWidget(QtWidgets.QWidget):
+>>>>>>> Stashed changes
     """ widget for pen, menu on clic """
     def __init__(self, parent, project):
         QtGui.QWidget.__init__(self)
@@ -83,9 +94,9 @@ class PenWidget(QtGui.QWidget):
                 self.customAction = action
 
     def event(self, event):
-        if event.type() == QtCore.QEvent.MouseButtonPress:
+        if event.type() == QtCore.QEvent.Type.MouseButtonPress:
             self.changePen()
-        elif event.type() == QtCore.QEvent.Paint:
+        elif event.type() == QtCore.QEvent.Type.Paint:
             p = QtGui.QPainter(self)
             p.fillRect (0, 0, self.width(), self.height(), 
                     QtGui.QBrush(QtGui.QColor(70, 70, 70)))
@@ -93,8 +104,13 @@ class PenWidget(QtGui.QWidget):
                     QtGui.QBrush(self.project.bgColor))
             if self.currentAction.pixmap:
                 p.drawPixmap(5, 5, self.currentAction.pixmap)
+<<<<<<< Updated upstream
         return QtGui.QWidget.event(self, event)
         
+=======
+        return QtWidgets.QWidget.event(self, event)
+
+>>>>>>> Stashed changes
     def changePen(self):
         self.penMenu.setActiveAction(self.currentAction)
         action = self.penMenu.exec(self.mapToGlobal(QtCore.QPoint(26, 2)), self.currentAction)
@@ -103,7 +119,7 @@ class PenWidget(QtGui.QWidget):
             self.project.pen = self.project.penDict[action.text()]
             self.project.penChangedSign.emit()
             self.update()
-        
+
     def setCustomPen(self, li):
         nLi = []
         mY = len(li)//2
@@ -147,9 +163,9 @@ class BrushWidget(QtGui.QWidget):
                 self.currentAction = action
 
     def event(self, event):
-        if event.type() == QtCore.QEvent.MouseButtonPress:
+        if event.type() == QtCore.QEvent.Type.MouseButtonPress:
             self.changeBrush()
-        elif event.type() == QtCore.QEvent.Paint:
+        elif event.type() == QtCore.QEvent.Type.Paint:
             p = QtGui.QPainter(self)
             p.fillRect (0, 0, self.width(), self.height(), 
                     QtGui.QBrush(QtGui.QColor(70, 70, 70)))
@@ -157,8 +173,13 @@ class BrushWidget(QtGui.QWidget):
                     QtGui.QBrush(self.project.bgColor))
             if self.currentAction.pixmap:
                 p.drawPixmap(5, 5, self.currentAction.pixmap)
+<<<<<<< Updated upstream
         return QtGui.QWidget.event(self, event)
         
+=======
+        return QtWidgets.QWidget.event(self, event)
+
+>>>>>>> Stashed changes
     def changeBrush(self):
         self.brushMenu.setActiveAction(self.currentAction)
         action = self.brushMenu.exec(self.mapToGlobal(QtCore.QPoint(26, 2)), self.currentAction)
@@ -167,20 +188,30 @@ class BrushWidget(QtGui.QWidget):
             self.project.brush = self.project.brushDict[action.text()]
             self.update()
 
+<<<<<<< Updated upstream
             
 class OptionFill(QtGui.QWidget):
+=======
+
+class OptionFill(QtWidgets.QWidget):
+>>>>>>> Stashed changes
     """ contextual option for the fill tool """
     def __init__(self, parent, project):
         QtGui.QVBoxLayout .__init__(self)
         self.project = project
         self.parent = parent
+<<<<<<< Updated upstream
         
         self.adjacentFillRadio = QtGui.QRadioButton("adjacent colors", self)
+=======
+
+        self.adjacentFillRadio = QtWidgets.QRadioButton("adjacent colors", self)
+>>>>>>> Stashed changes
         self.adjacentFillRadio.pressed.connect(self.adjacentPressed)
         self.adjacentFillRadio.setChecked(True)
         self.similarFillRadio = QtGui.QRadioButton("similar colors", self)
         self.similarFillRadio.pressed.connect(self.similarPressed)
-        
+
         ### Layout ###
         layout = QtGui.QVBoxLayout()
         layout.setSpacing(0)
@@ -189,26 +220,37 @@ class OptionFill(QtGui.QWidget):
         layout.addStretch()
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
-        
+
     def adjacentPressed(self):
         self.project.fillMode = "adjacent"
-        
+
     def similarPressed(self):
         self.project.fillMode = "similar"
+<<<<<<< Updated upstream
         
         
 class OptionSelect(QtGui.QWidget):
+=======
+
+
+class OptionSelect(QtWidgets.QWidget):
+>>>>>>> Stashed changes
     """ contextual option for the select tool """
     def __init__(self, parent, project):
         QtGui.QVBoxLayout .__init__(self)
         self.project = project
+<<<<<<< Updated upstream
         
         self.cutFillRadio = QtGui.QRadioButton("cut", self)
+=======
+
+        self.cutFillRadio = QtWidgets.QRadioButton("cut", self)
+>>>>>>> Stashed changes
         self.cutFillRadio.pressed.connect(self.cutPressed)
         self.cutFillRadio.setChecked(True)
         self.copyFillRadio = QtGui.QRadioButton("copy", self)
         self.copyFillRadio.pressed.connect(self.copyPressed)
-        
+
         ### Layout ###
         layout = QtGui.QVBoxLayout()
         layout.setSpacing(0)
@@ -217,10 +259,10 @@ class OptionSelect(QtGui.QWidget):
         layout.addStretch()
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
-        
+
     def cutPressed(self):
         self.project.selectMode = "cut"
-    
+
     def copyPressed(self):
         self.project.selectMode = "copy"
 
@@ -230,13 +272,18 @@ class OptionMove(QtGui.QWidget):
     def __init__(self, parent, project):
         QtGui.QVBoxLayout .__init__(self)
         self.project = project
+<<<<<<< Updated upstream
         
         self.noWrapRadio = QtGui.QRadioButton("no wrap", self)
+=======
+
+        self.noWrapRadio = QtWidgets.QRadioButton("no wrap", self)
+>>>>>>> Stashed changes
         self.noWrapRadio.pressed.connect(self.noWrapPressed)
         self.noWrapRadio.setChecked(True)
         self.wrapRadio = QtGui.QRadioButton("wrap", self)
         self.wrapRadio.pressed.connect(self.wrapPressed)
-        
+
         ### Layout ###
         layout = QtGui.QVBoxLayout()
         layout.setSpacing(0)
@@ -245,10 +292,10 @@ class OptionMove(QtGui.QWidget):
         layout.addStretch()
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
-        
+
     def noWrapPressed(self):
         self.project.moveMode = "no_wrap"
-    
+
     def wrapPressed(self):
         self.project.moveMode = "wrap"
 
@@ -265,7 +312,7 @@ class OptionsWidget(QtGui.QWidget):
         self.colorWidget = ColorWidget(True, self)
         self.onionSkinB = Button("onion skin",
             "icons/onionskin_prev.png", self.onionskinClicked, True)
-        
+
         self.optionFill = OptionFill(self, self.project)
         self.optionMove = OptionMove(self, self.project)
         self.optionSelect = OptionSelect(self, self.project)
@@ -292,9 +339,9 @@ class OptionsWidget(QtGui.QWidget):
         layout.addWidget(self.optionSelect)
         self.optionSelect.hide()
         layout.addStretch()
-        
+
         self.setLayout(layout)
-        
+
     def toolChanged(self):
         if self.project.tool == "fill":
             self.optionSelect.hide()
@@ -312,7 +359,7 @@ class OptionsWidget(QtGui.QWidget):
             self.optionFill.hide()
             self.optionMove.hide()
             self.optionSelect.hide()
-            
+
     def onionskinClicked(self):
         self.project.onionSkin["check"] = self.onionSkinB.isChecked()
         self.project.updateViewSign.emit()

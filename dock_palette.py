@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 
 from widget import Button, Viewer
 from colorPicker import ColorDialog
@@ -18,11 +24,11 @@ class PaletteCanvas(QtGui.QWidget):
         self.black = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         self.white = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         self.parent.project.updateBackgroundSign.connect(self.updateBackground)
-        
+
     def updateBackground(self):
          self.background = QtGui.QBrush(self.parent.project.bgColor)
          self.update()
-         
+ 
     def paintEvent(self, ev=''):
         p = QtGui.QPainter(self)
         p.fillRect (0, 0, self.width(), self.height(), self.background)
@@ -39,7 +45,7 @@ class PaletteCanvas(QtGui.QWidget):
                 p.fillRect(x+2, y+2, 16, 16, QtGui.QBrush(QtGui.QColor().fromRgba(i)))
 
     def event(self, event):
-        if (event.type() == QtCore.QEvent.MouseButtonPress and
+        if (event.type() == QtCore.QEvent.Type.MouseButtonPress and
                        event.button()==QtCore.Qt.LeftButton):
             item = self.getItem(event.x(), event.y())
             if item is not None:
@@ -49,8 +55,13 @@ class PaletteCanvas(QtGui.QWidget):
             item = self.getItem(event.x(), event.y())
             if item is not None:
                 self.parent.editColor(item)
+<<<<<<< Updated upstream
         return QtGui.QWidget.event(self, event)
         
+=======
+        return QtWidgets.QWidget.event(self, event)
+
+>>>>>>> Stashed changes
     def getItem(self, x, y):
         x, y = ((x-2) // 20), ((y-2) // 20)
         if y == 0:

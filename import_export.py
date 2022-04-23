@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 
 import os
 import xml.etree.ElementTree as ET
@@ -24,7 +30,7 @@ def open_pix(dirName):
             print("Can't open file")
             return None, None
     return None, None
-    
+
 def save_pix(xml, url):
     try:
         save = open(url, "w")
@@ -35,7 +41,7 @@ def save_pix(xml, url):
     except IOError:
         print("Can't open file")
         return None
-        
+
 def get_save_url(dirName=None, ext="pix"):
     if not dirName:
         dirName = os.path.expanduser("~")
@@ -92,7 +98,7 @@ def import_img(project, urls, size=QtCore.QSize(0, 0), colorTable=[0]):
                 canvasList.append((img, str(url)))
     # get the colortable and max size 
     for img, url in canvasList:
-        if img.format() == QtGui.QImage.Format_Indexed8:
+        if img.format() == QtGui.QImage.Format.Format_Indexed8:
             colorMixed = img.mixColortable(colorTable)
         else:
             colorMixed = img.sniffColortable(colorTable)
@@ -105,9 +111,9 @@ def import_img(project, urls, size=QtCore.QSize(0, 0), colorTable=[0]):
     # convert all image to the previously defined colortable and size
     for n, img in enumerate(imgs):
         if img.size() != size:
-            img = Canvas(project, img.copy(0, 0, size.width(), size.height()).convertToFormat(QtGui.QImage.Format_Indexed8, colorTable))
+            img = Canvas(project, img.copy(0, 0, size.width(), size.height()).convertToFormat(QtGui.QImage.Format.Format_Indexed8, colorTable))
         else:
-            img = Canvas(project, img.convertToFormat(QtGui.QImage.Format_Indexed8, colorTable))
+            img = Canvas(project, img.convertToFormat(QtGui.QImage.Format.Format_Indexed8, colorTable))
         imgs[n] = img
     # show an error and the list of canceled images
     if canceled:
@@ -181,12 +187,12 @@ def export_png(project, fullUrl=""):
                     break
     for i in range(nFrames):
         fn = "%s%s%s.png" %(url, "0"*(len(str(nFrames))-len(str(i))), i)
-        
+
         canvasList = project.timeline.getVisibleCanvasList(i)
         if len(canvasList) == 1:
             canvas = canvasList[0]
         else:
-            canvas = QtGui.QImage(project.size, QtGui.QImage.Format_ARGB32)
+            canvas = QtGui.QImage(project.size, QtGui.QImage.Format.Format_ARGB32)
             canvas.fill(QtGui.QColor(0, 0, 0, 0))
             p = QtGui.QPainter(canvas)
             for c in reversed(canvasList):
@@ -194,7 +200,7 @@ def export_png(project, fullUrl=""):
                     p.drawImage(0, 0, c)
             p.end()
         canvas.save(fn)
-        
+
     # convert all png to a gif with imagemagick   
     convertCommand = 'convert'
     import platform
@@ -202,7 +208,7 @@ def export_png(project, fullUrl=""):
         convertCommand = "\"" + os.path.join(os.path.dirname(os.path.realpath(__file__)), "imagemagick\\convert.exe\"")
     os.system("%s -delay 1/%s -dispose Background -loop 0 %s*.png %s.gif" %(convertCommand, project.fps, url, url))
     return fullUrl
-    
+
 def import_palette(url, nColor=0):
     """ take a file palette (.gpl or .pal) and return a list of QRgba """
     save = open(url, "r")
@@ -229,7 +235,7 @@ def import_palette(url, nColor=0):
             pal.append(QtGui.QColor(int(i[0]), int(i[1]), int(i[2])).rgb())
     save.close()
     return pal
-    
+
 def export_palette(pal):
     """take a list of QRgb and write a palette file .pal
        without the first alpha color"""
@@ -240,14 +246,14 @@ def export_palette(pal):
         col = QtGui.QColor.fromRgb(i)
         text = "%s%s %s %s\n" %(text, col.red(), col.green(), col.blue())
     return text
-    
+
 def export_pen(pen, name):
     text = '#!/usr/bin/env python\n#-*- coding: utf-8 -*-\n\nname = "%s"\nicon = "custom.png"\npixelList = (' %(name)
     for i in pen:
         text = "%s(%s, %s)," %(text, i[0], i[1])
     text = "%s)" %(text)
     return text
-    
+
 if __name__ == '__main__':
     import sys
     app = QtGui.QApplication(sys.argv)

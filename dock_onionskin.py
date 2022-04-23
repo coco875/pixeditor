@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 
 from widget import Button
 from colorPicker import ColorDialog
@@ -18,25 +24,30 @@ class OnionSkinWidget(QtGui.QWidget):
     def __init__(self, project):
         QtGui.QWidget.__init__(self)
         self.project = project
-        
+
         # color
         self.prevcolorIcon = QtGui.QPixmap(32, 16)
         self.prevcolorIcon.fill(self.project.onionSkin["prev_color"])
         self.colorPrevB = Button("previous frames color",
             QtGui.QIcon(self.prevcolorIcon), self.prevColorChanged)
         self.colorPrevB.setIconSize(QtCore.QSize(36, 20))
+<<<<<<< Updated upstream
         
         self.colorCheck = QtGui.QCheckBox(self)
+=======
+
+        self.colorCheck = QtWidgets.QCheckBox(self)
+>>>>>>> Stashed changes
         self.colorCheck.setToolTip("colored onion skin")
         self.colorCheck.setChecked(self.project.onionSkin["color"])
         self.colorCheck.stateChanged.connect(self.checkColor)
-        
+
         self.nextcolorIcon = QtGui.QPixmap(32, 16)
         self.nextcolorIcon.fill(self.project.onionSkin["next_color"])
         self.colorNextB = Button("next frames color",
             QtGui.QIcon(self.nextcolorIcon), self.nextColorChanged)
         self.colorNextB.setIconSize(QtCore.QSize(36, 20))
-        
+
         # onionskin
         prev = self.project.onionSkin["prev"]
         self.prev1Slider = QtGui.QSlider(QtCore.Qt.Vertical, self)
@@ -60,14 +71,19 @@ class OnionSkinWidget(QtGui.QWidget):
         self.prev3Check = QtGui.QCheckBox(self)
         self.prev3Check.setChecked(prev[2][0])
         self.prev3Check.stateChanged.connect(self.valueChanged)
+<<<<<<< Updated upstream
         
         self.currentSlider = QtGui.QSlider(QtCore.Qt.Vertical, self)
+=======
+
+        self.currentSlider = QtWidgets.QSlider(QtCore.Qt.Vertical, self)
+>>>>>>> Stashed changes
         self.currentSlider.setRange(0, 100)
         self.currentSlider.setValue(100)
         #self.currentSlider.setDisabled(True)
         self.currentSlider.setMinimumHeight(100)
         self.currentSlider.valueChanged.connect(self.valueChanged)
-        
+
         nex = self.project.onionSkin["next"]
         self.next1Slider = QtGui.QSlider(QtCore.Qt.Vertical, self)
         self.next1Slider.setRange(0, 100)
@@ -90,7 +106,7 @@ class OnionSkinWidget(QtGui.QWidget):
         self.next3Check = QtGui.QCheckBox(self)
         self.next3Check.setChecked(nex[2][0])
         self.next3Check.stateChanged.connect(self.valueChanged)
-        
+
         # layout
         colorLayout = QtGui.QHBoxLayout()
         colorLayout.setSpacing(0)
@@ -118,7 +134,7 @@ class OnionSkinWidget(QtGui.QWidget):
         layout.addLayout(colorLayout)
         layout.addLayout(sliderLayout)
         self.setLayout(layout)
-        
+
     def valueChanged(self, value):
         self.project.onionSkin["prev"] = [[self.prev1Check.isChecked(), self.prev1Slider.value()/100],
                                           [self.prev2Check.isChecked(), self.prev2Slider.value()/100],
@@ -128,7 +144,7 @@ class OnionSkinWidget(QtGui.QWidget):
                                           [self.next3Check.isChecked(), self.next3Slider.value()/100]]
         self.project.currentOpacity=self.currentSlider.value()/100.0
         self.project.updateViewSign.emit()
-        
+
     def checkColor(self):
         self.project.onionSkin["color"] = self.colorCheck.isChecked()
         self.project.updateViewSign.emit()
@@ -141,7 +157,7 @@ class OnionSkinWidget(QtGui.QWidget):
         self.prevcolorIcon.fill(self.project.onionSkin["prev_color"])
         self.colorPrevB.setIcon(QtGui.QIcon(self.prevcolorIcon))
         self.project.updateViewSign.emit()
-        
+
     def nextColorChanged(self):
         ok, color = ColorDialog(False, self.project.onionSkin["next_color"]).getQColor()
         if not ok:

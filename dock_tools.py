@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 
 from widget import Button, Label
 
@@ -35,7 +41,7 @@ class ToolsWidget(QtGui.QWidget):
         layout.addStretch()
         layout.setContentsMargins(6, 0, 6, 0)
         self.setLayout(layout)
-        
+
     def penClicked(self):
         self.project.tool = "pen"
         self.penB.setChecked(True)
@@ -71,7 +77,7 @@ class ToolsWidget(QtGui.QWidget):
         self.moveB.setChecked(True)
         self.selectB.setChecked(False)
         self.project.toolChangedSign.emit()
-        
+
     def selectClicked(self):
         self.project.tool = "select"
         self.fillB.setChecked(False)

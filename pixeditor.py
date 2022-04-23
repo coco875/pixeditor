@@ -18,8 +18,14 @@
 
 import sys
 import os
+<<<<<<< Updated upstream
 from PyQt4 import QtCore
 from PyQt4 import QtGui
+=======
+from PyQt6 import QtCore
+from PyQt6 import QtGui
+from PyQt6 import QtWidgets
+>>>>>>> Stashed changes
 
 from data import Project
 from dock_timeline import TimelineWidget
@@ -38,18 +44,18 @@ class SelectionRect(QtGui.QGraphicsRectItem):
         QtGui.QGraphicsRectItem.__init__(self, pos.x(), pos.y(), 1, 1)
         self.startX = pos.x()
         self.startY = pos.y()
-        
+
         self.setPen(QtGui.QPen(QtGui.QColor("black"), 0))
         dashPen = QtGui.QPen(QtGui.QColor("white"), 0, QtCore.Qt.DashLine)
         dashPen.setDashPattern([6, 6])
         self.dash = QtGui.QGraphicsRectItem(self.rect(), self)
         self.dash.setPen(dashPen)
-        
+
     def scale(self, pos):
         rect = QtCore.QRectF(self.startX, self.startY, pos.x() - self.startX, pos.y() - self.startY)
         self.setRect(rect)
         self.dash.setRect(rect)
-        
+
     def getRect(self):
         """ return a QRect with positive width and height """
         w = int(self.rect().width())
@@ -65,6 +71,7 @@ class SelectionRect(QtGui.QGraphicsRectItem):
         else:
             y = int(self.rect().y())
         return QtCore.QRect(x, y, w, h)
+<<<<<<< Updated upstream
         
         
 class Scene(QtGui.QGraphicsView):
@@ -74,6 +81,17 @@ class Scene(QtGui.QGraphicsView):
     def __init__(self, project):
         QtGui.QGraphicsView.__init__(self)
         self.project = project
+=======
+
+
+class Scene(QtWidgets.QGraphicsView):
+    """ widget used to display the layers, onionskin, pen, background
+        it can zoom with mouseWheel, pan with mouseMiddleClic
+        it send mouseRightClic info to the current Canvas"""
+    def __init__(self, project: Project):
+        QtWidgets.QGraphicsView.__init__(self)
+        self.project:Project = project
+>>>>>>> Stashed changes
         self.zoomN = 1
         self.setAcceptDrops(False)
         # scene
@@ -108,7 +126,7 @@ class Scene(QtGui.QGraphicsView):
             self.onionNextItems.append(self.scene.addPixmap(p))
             self.onionNextItems[-1].setZValue(104+i)
             self.onionNextItems[-1].hide()
-        
+
         # pen
         self.penItem = QtGui.QGraphicsRectItem(0, 0, 1, 1)
         self.penItem.setBrush(QtGui.QBrush(QtGui.QColor(0, 0, 0, 0)))
@@ -142,12 +160,12 @@ class Scene(QtGui.QGraphicsView):
                     p = QtGui.QGraphicsRectItem(i[0], i[1], 1, 1, self.penItem)
                     p.setPen(pen)
                     p.setBrush(brush)
-                
+
     def updateBackground(self):
         self.setBackgroundBrush(QtGui.QBrush(self.project.bgColor))
         self.bg.setPixmap(Background(self.project.size, 
                                      self.project.bgPattern))
-        
+
     def changeFrame(self):
         self.canvasList = self.project.timeline.getCanvasList(self.project.curFrame)
         # resize scene if needed
@@ -166,9 +184,12 @@ class Scene(QtGui.QGraphicsView):
         # updates canvas
         for n, i in enumerate(self.canvasList):
             if i and self.project.timeline[n].visible:
+                print(i.size())
                 self.itemList[n].setVisible(True)
-                self.itemList[n].pixmap().convertFromImage(i)
+                print(self.itemList[n].pixmap().convertFromImage(i))
+                print(QtGui.QPixmap(i).size())
                 self.itemList[n].update()
+                print(self.itemList[n].pixmap().size())
                 self.itemList[n].setOpacity(self.project.currentOpacity)
             else:
                 self.itemList[n].setVisible(False)
@@ -270,10 +291,10 @@ class Scene(QtGui.QGraphicsView):
         if (pos.x()>=0 and pos.y()>=0 \
           and pos.x()<self.project.size.width() \
           and pos.y()<self.project.size.height()):
-          self.coords.setText("x %(x)03d\ny %(y)03d"%{"x":pos.x(),"y":pos.y()});
+          self.coords.setText("x %(x)03d\ny %(y)03d"%{"x":pos.x(),"y":pos.y()})
         else:
-          self.coords.setText("x\ny");
-        
+          self.coords.setText("x\ny")
+
         l = self.project.curLayer
         # pan
         if event.buttons() == QtCore.Qt.MidButton:
@@ -338,7 +359,7 @@ class Scene(QtGui.QGraphicsView):
 
     def leaveEvent(self, event):
         self.penItem.hide()
-        
+
 
 class MainWindow(QtGui.QMainWindow):
     """ Main windows of the application """
@@ -347,7 +368,7 @@ class MainWindow(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)
         self.setAcceptDrops(True)
         self.dropped.connect(self.importAsLayer)
-        
+
         self.project = Project(self)
         self.toolsWidget = ToolsWidget(self.project)
         self.optionsWidget = OptionsWidget(self.project)
@@ -355,23 +376,29 @@ class MainWindow(QtGui.QMainWindow):
         self.onionSkinWidget = OnionSkinWidget(self.project)
         self.timelineWidget = TimelineWidget(self.project)
         self.scene = Scene(self.project)
-        
+
         self.updateTitle()
         self.project.updateTitleSign.connect(self.updateTitle)
 
         ### layout #####################################################
         self.setDockNestingEnabled(True)
         self.setCentralWidget(self.scene)
+<<<<<<< Updated upstream
         
         QtGui.QApplication.setOrganizationName("pixeditor")
         QtGui.QApplication.setApplicationName("pixeditor")
+=======
+
+        QtWidgets.QApplication.setOrganizationName("pixeditor")
+        QtWidgets.QApplication.setApplicationName("pixeditor")
+>>>>>>> Stashed changes
         settings = QtCore.QSettings()
         settings.beginGroup("mainWindow")
         try:
             lock = bool(int(settings.value("lock")))
         except TypeError:
             lock = True
-        
+
         toolsDock = Dock(self.toolsWidget, "tools", lock)
         toolsDock.setObjectName("toolsDock")
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, toolsDock)
@@ -384,11 +411,11 @@ class MainWindow(QtGui.QMainWindow):
         paletteDock = Dock(self.paletteWidget, "palette", lock)
         paletteDock.setObjectName("paletteDock")
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, paletteDock)
-        
+
         onionSkinDock = Dock(self.onionSkinWidget, "onion skin", lock)
         onionSkinDock.setObjectName("onionSkinDock")
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, onionSkinDock)
-        
+
         timelineDock = Dock(self.timelineWidget, "timeline", lock)
         timelineDock.setObjectName("timelineDock")
         self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, timelineDock)
@@ -402,7 +429,11 @@ class MainWindow(QtGui.QMainWindow):
         saveAction = QtGui.QAction('Save', self)
         saveAction.triggered.connect(self.saveAction)
         saveAction.setShortcut('Ctrl+S')
+<<<<<<< Updated upstream
         
+=======
+
+>>>>>>> Stashed changes
         importNewAction = QtGui.QAction('Import as new', self)
         importNewAction.triggered.connect(self.importAsNewAction)
         importLayerAction = QtGui.QAction('Import as layer', self)
@@ -410,11 +441,15 @@ class MainWindow(QtGui.QMainWindow):
         exportAction = QtGui.QAction('Export', self)
         exportAction.triggered.connect(self.exportAction)
         exportAction.setShortcut('Ctrl+E')
+<<<<<<< Updated upstream
         
+=======
+
+>>>>>>> Stashed changes
         exitAction = QtGui.QAction('Exit', self)
         exitAction.triggered.connect(self.close)
         exitAction.setShortcut('Ctrl+Q')
-        
+
         fileMenu = menubar.addMenu('File')
         fileMenu.addAction(openAction)
         fileMenu.addAction(saveAsAction)
@@ -425,7 +460,7 @@ class MainWindow(QtGui.QMainWindow):
         fileMenu.addAction(exportAction)
         fileMenu.addSeparator()
         fileMenu.addAction(exitAction)
-        
+
         ### Edit menu ###
         undoAction = QtGui.QAction('Undo', self)
         undoAction.triggered.connect(self.project.undo)
@@ -433,7 +468,11 @@ class MainWindow(QtGui.QMainWindow):
         redoAction = QtGui.QAction('Redo', self)
         redoAction.triggered.connect(self.project.redo)
         redoAction.setShortcut('Ctrl+Y')
+<<<<<<< Updated upstream
         
+=======
+
+>>>>>>> Stashed changes
         cutAction = QtGui.QAction('Cut', self)
         cutAction.triggered.connect(self.timelineWidget.cut)
         cutAction.setShortcut('Ctrl+X')
@@ -443,7 +482,7 @@ class MainWindow(QtGui.QMainWindow):
         pasteAction = QtGui.QAction('Paste', self)
         pasteAction.triggered.connect(self.timelineWidget.paste)
         pasteAction.setShortcut('Ctrl+V')
-        
+
         editMenu = menubar.addMenu('Edit')
         editMenu.addAction(undoAction)
         editMenu.addAction(redoAction)
@@ -451,7 +490,7 @@ class MainWindow(QtGui.QMainWindow):
         editMenu.addAction(cutAction)
         editMenu.addAction(copyAction)
         editMenu.addAction(pasteAction)
-        
+
         ### project menu ###
         newAction = QtGui.QAction('New', self)
         newAction.triggered.connect(self.newAction)
@@ -465,7 +504,7 @@ class MainWindow(QtGui.QMainWindow):
         minimizePaletteAction.triggered.connect(self.minimizePaletteAction)
         prefAction = QtGui.QAction('Background', self)
         prefAction.triggered.connect(self.backgroundAction)
-        
+
         projectMenu = menubar.addMenu('Project')
         projectMenu.addAction(newAction)
         projectMenu.addAction(cropAction)
@@ -481,12 +520,12 @@ class MainWindow(QtGui.QMainWindow):
         savePenAction.triggered.connect(self.savePenAction)
         reloadResourcesAction = QtGui.QAction('reload resources', self)
         reloadResourcesAction.triggered.connect(self.reloadResourcesAction)
-        
+
         resourcesMenu = menubar.addMenu('Resources')
         resourcesMenu.addAction(savePaletteAction)
         resourcesMenu.addAction(savePenAction)
         resourcesMenu.addAction(reloadResourcesAction)
-        
+
         ### view menu ###
         viewMenu = menubar.addMenu('View')
         dockWidgets = self.findChildren(QtGui.QDockWidget)
@@ -498,7 +537,7 @@ class MainWindow(QtGui.QMainWindow):
         self.lockLayoutWidget.setChecked(lock)
         self.lockLayoutWidget.toggled.connect(self.lockLayoutAction)
         viewMenu.addAction(self.lockLayoutWidget)
-        
+
         ### shortcuts ###
         QtGui.QShortcut(QtCore.Qt.Key_Left, self, lambda : self.selectFrame(-1))
         QtGui.QShortcut(QtCore.Qt.Key_Right, self, lambda : self.selectFrame(1))
@@ -511,9 +550,15 @@ class MainWindow(QtGui.QMainWindow):
         QtGui.QShortcut(QtCore.Qt.Key_4, self, toolsDock.widget().moveClicked)
         QtGui.QShortcut(QtCore.Qt.Key_5, self, toolsDock.widget().selectClicked)
         self.hiddenDock = []
+<<<<<<< Updated upstream
         QtGui.QShortcut(QtCore.Qt.Key_Tab, self, self.hideDock)
         QtGui.QShortcut(QtCore.Qt.Key_E, self, self.project.changeColor)
         
+=======
+        QtWidgets.QShortcut(QtCore.Qt.Key_Tab, self, self.hideDock)
+        QtWidgets.QShortcut(QtCore.Qt.Key_E, self, self.project.changeColor)
+
+>>>>>>> Stashed changes
         ### settings ###
         try:
             self.restoreGeometry(settings.value("geometry"))
@@ -549,7 +594,7 @@ class MainWindow(QtGui.QMainWindow):
                 self.project.dirUrl = os.path.dirname(url)
                 self.project.saved = True
                 self.updateTitle()
-        
+
     def saveAction(self):
         if self.project.url:
             url = save_pix(self.project.exportXml(), self.project.url)
@@ -575,7 +620,7 @@ class MainWindow(QtGui.QMainWindow):
             self.project.updateViewSign.emit()
             self.project.updatePaletteSign.emit()
             self.project.updateTimelineSign.emit()
-            
+
     def importAsLayerAction(self):
         urls = QtGui.QFileDialog.getOpenFileNames(
                     None, "Import PNG and GIF", 
@@ -583,7 +628,7 @@ class MainWindow(QtGui.QMainWindow):
                     "PNG and GIF files (*.png *.gif);;All files (*)")
         if urls:
             self.importAsLayer(urls)
-            
+
     def importAsLayer(self, urls):
         size, frames, colorTable = import_img(self.project, urls,
                                               self.project.size,
@@ -594,10 +639,10 @@ class MainWindow(QtGui.QMainWindow):
             self.project.updateViewSign.emit()
             self.project.updatePaletteSign.emit()
             self.project.updateTimelineSign.emit()
-        
+
     def exportAction(self):
         export_png(self.project, self.project.dirUrl)
-    
+
     def closeEvent(self, event):
         ret = True
         if not self.project.saved:
@@ -618,7 +663,7 @@ class MainWindow(QtGui.QMainWindow):
             event.accept()
         else:
             event.ignore()
-        
+
     ######## Project menu ##############################################
     def newAction(self):
         size, palette = NewDialog().getReturn()
@@ -649,7 +694,7 @@ class MainWindow(QtGui.QMainWindow):
                     lambda c: Canvas(self.project, c.scaled(newSize)))
             self.project.size = newSize
             self.project.updateViewSign.emit()
-            
+
     def replacePaletteAction(self):
         url = QtGui.QFileDialog.getOpenFileName(None, "open palette file", 
                 os.path.join("resources", "palette"), "Palette files (*.pal, *.gpl );;All files (*)")
@@ -663,7 +708,7 @@ class MainWindow(QtGui.QMainWindow):
                 self.project.updateViewSign.emit()
                 self.project.updatePaletteSign.emit()
                 self.project.colorChangedSign.emit()
-            
+
     def minimizePaletteAction(self):
         self.project.saveToUndo("colorTable_frames")
         usedColorsIndices = self.project.getUsedColorList()
@@ -677,7 +722,7 @@ class MainWindow(QtGui.QMainWindow):
         self.project.updateViewSign.emit()
         self.project.updatePaletteSign.emit()
         self.project.colorChangedSign.emit()
-        
+
     def backgroundAction(self):
         color, pattern = BackgroundDialog(self.project.bgColor,
                                 self.project.bgPattern).getReturn()
@@ -698,7 +743,7 @@ class MainWindow(QtGui.QMainWindow):
                 print("saved")
             except IOError:
                 print("Can't open file")
-        
+
     def savePenAction(self):
         if self.project.penDict["custom"]:
             url = get_save_url(os.path.join("resources", "pen"), "py")
@@ -716,12 +761,12 @@ class MainWindow(QtGui.QMainWindow):
         self.project.importResources()
         self.toolsWidget.penWidget.loadPen()
         self.toolsWidget.brushWidget.loadBrush()
-        
+
     ######## View menu ##############################################
     def lockLayoutAction(self, check):
         for dock in self.findChildren(QtGui.QDockWidget):
             dock.lock(check)
-    
+
     def hideDock(self):
         hide = False
         for dock in self.findChildren(QtGui.QDockWidget):
@@ -740,7 +785,7 @@ class MainWindow(QtGui.QMainWindow):
         else:
             for dock in self.findChildren(QtGui.QDockWidget):
                 dock.show()
-            
+
     ######## Shortcuts #################################################
     def selectFrame(self, n):
         exf = self.project.curFrame
@@ -765,7 +810,7 @@ class MainWindow(QtGui.QMainWindow):
             self.project.curLayer += n
             self.project.updateTimelineSign.emit()
             self.project.updateViewSign.emit()
-            
+
     def updateTitle(self):
         url, sav = "untitled", "* "
         if self.project.saved:
